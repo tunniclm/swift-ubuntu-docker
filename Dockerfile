@@ -21,7 +21,7 @@ MAINTAINER IBM Swift Engineering at IBM Cloud
 LABEL Description="Linux Ubuntu 14.04 image with the Swift binaries."
 
 # Set environment variables for image
-ENV SWIFT_SNAPSHOT swift-DEVELOPMENT-SNAPSHOT-2016-08-07-a
+ENV SWIFT_SNAPSHOT swift-DEVELOPMENT-SNAPSHOT-2016-08-18-a
 ENV UBUNTU_VERSION ubuntu14.04
 ENV UBUNTU_VERSION_NO_DOTS ubuntu1404
 ENV HOME /root
@@ -57,6 +57,10 @@ RUN apt-get update && apt-get install -y \
   openssl \
   libssl-dev
 
+# Set clang 3.8 as default
+RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.8 100
+
 ADD .vim /root/.vim
 ADD .vimrc /root/.vimrc
 
@@ -68,12 +72,6 @@ RUN wget https://swift.org/builds/development/$UBUNTU_VERSION_NO_DOTS/$SWIFT_SNA
   && rm $SWIFT_SNAPSHOT-$UBUNTU_VERSION.tar.gz
 ENV PATH $WORK_DIR/$SWIFT_SNAPSHOT-$UBUNTU_VERSION/usr/bin:$PATH
 RUN swiftc -h
-
-# Set compiler environment variables
-ENV CC /usr/bin/clang-3.8
-ENV CXX /usr/bin/clang-3.8
-ENV OBJC /usr/bin/clang-3.8
-ENV OBJCXX /usr/bin/clang-3.8
 
 # Clone and install swift-corelibs-libdispatch
 RUN git clone -b $LIBDISPATCH_BRANCH https://github.com/apple/swift-corelibs-libdispatch.git \
