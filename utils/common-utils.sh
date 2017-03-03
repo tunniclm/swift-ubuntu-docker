@@ -33,12 +33,6 @@ function init {
 #----------------------------------------------------------
 function installSystemLibraries {
 
-  # Fetch all of the dependencies
-  if type "swift" &> /dev/null; then
-    echo "Fetching Swift packages..."
-    swift package fetch
-  fi
-
   echo "Installing system dependencies (if any)..."
 
   # Update the Package cache
